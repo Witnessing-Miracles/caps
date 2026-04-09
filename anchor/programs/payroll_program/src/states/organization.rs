@@ -40,4 +40,3 @@ impl Organization {
         + 8                             // created_at (i64)
         + 1;                            // bump (u8)
 }
-
