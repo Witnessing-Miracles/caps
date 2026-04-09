@@ -8,6 +8,7 @@ skip-lint = false
 payroll_program = "A9fnM3skS5kbECt2isFV2EGvS4D7hnsMjnqi2YBwaeed"
 
 [programs.localnet]
+payroll_program = "A9fnM3skS5kbECt2isFV2EGvS4D7hnsMjnqi2YBwaeed"
 
 [registry]
 url = "https://api.apr.dev"
