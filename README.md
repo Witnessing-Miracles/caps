@@ -14,6 +14,8 @@ CAPs is a fully on-chain, AI-powered payroll system built on Solana. Instead of 
 
 The AI interprets your instructions, constructs the appropriate on-chain transactions, and prompts you to authorize them via your wallet. No backend. No intermediary. Just you, the AI, and the blockchain.
 
+![CAPs Main Interface](./img/main_interface.png)
+
 ---
 
 ## The Problem It Solves
@@ -90,6 +92,8 @@ CAPs is designed with a zero-trust, serverless philosophy. The OpenAI integratio
 2. **Paste your OpenAI API key** when prompted — it never leaves your browser
 3. **Start chatting** — the AI remembers context and executes everything on-chain
 
+![Dashboard after wallet connected](./img/wallet_connected.png)
+
 ---
 
 ## Tech Stack
@@ -132,7 +136,7 @@ CAPs is designed with a zero-trust, serverless philosophy. The OpenAI integratio
 ## Local Development
 
 ```bash
-git clone ...
+git clone https://github.com/Witnessing-Miracles/caps
 cd caps
 npm install
 
