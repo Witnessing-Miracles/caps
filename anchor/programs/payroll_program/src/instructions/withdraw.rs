@@ -29,7 +29,6 @@ pub fn withdraw(ctx: Context<WithdrawCtx>, amount: u64) -> Result<()> {
 
     // Log the withdrawal
     msg!("Withdrawn {} lamports from treasury.", amount);
-
     Ok(())
 }
 

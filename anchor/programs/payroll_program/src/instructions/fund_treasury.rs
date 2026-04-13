@@ -20,7 +20,7 @@ pub fn fund_treasury(ctx: Context<FundTreasuryCtx>, amount: u64) -> Result<()> {
     // Create CPI context with system program
     let cpi_ctx = CpiContext::new(
         ctx.accounts.system_program.to_account_info(),
-        cpi_accounts,
+        cpi_accounts
     );
 
     // Update the organization's treasury balance

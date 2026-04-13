@@ -33,10 +33,11 @@ pub fn create_org(ctx: Context<CreateOrgCtx>, name: String) -> Result<()> {
 
     // Log message for debugging and user feedback
     msg!("Organization '{}' created.", name);
-
     Ok(())
 }
 
+#[derive(Accounts)]
+#[instruction(name: String)]
 // Context struct: defines all accounts needed for this instruction
 pub struct CreateOrgCtx<'info> {
     /**
@@ -54,10 +55,9 @@ pub struct CreateOrgCtx<'info> {
         init,
         payer = authority,
         space = 8 + Organization::INIT_SPACE,
-        seeds = [b"org", authority.key().as_ref()],
+        seeds = [b"org", authority.key().as_ref(), name.as_bytes()],
         bump
     )]
-
     pub org: Account<'info, Organization>,
 
     // The transaction signer (must be the authority)

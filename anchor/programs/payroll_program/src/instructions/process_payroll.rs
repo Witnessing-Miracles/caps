@@ -22,7 +22,7 @@ pub fn process_payroll<'info>(
 
     // Cache organization key and program ID for PDA verification
     let org_key = ctx.accounts.org.key();
-    let program_id = ctx.program_id;
+    let program_id = *ctx.program_id;
 
     // ======== First Pass: Validate and Calculate Total Payout ========
     // We do this separately to ensure all accounts are valid before transferring
@@ -30,7 +30,7 @@ pub fn process_payroll<'info>(
 
     for i in 0..num_workers {
         // Calculate indices: workers are in alternating pairs
-        let pda_idx = 1 * 2;            // Even indices: worker PDA
+        let pda_idx = i * 2;            // Even indices: worker PDA
         let wallet_idx = pda_idx + 1;   // Odd indices: worker wallet
 
         let pad_ai = &ctx.remaining_accounts[pda_idx];
@@ -39,7 +39,7 @@ pub fn process_payroll<'info>(
         // Verify the worker PDA is correctly derived
         // Reconstruct the expected PDA address
         let worker_wallet_key = wallet_ai.key();
-        let worker_pda_seeds = &[b"worker".as_ref(), org_key().as_ref(), worker_wallet_key().as_ref(),];
+        let worker_pda_seeds = &[b"worker".as_ref(), org_key().as_ref(), worker_wallet_key.as_ref(),];
         let (expected_pda, _ ) = Pubkey::find_program_address(worker_pda_seeds, &program_id);
 
         // Ensure the provided PDA matches the expected one
@@ -72,7 +72,7 @@ pub fn process_payroll<'info>(
         let wallet_ai = &ctx.remaining_accounts[wallet_idx];
 
         // Deserialize worker data from the PDA
-        let worker = Account::<Worker>::try_from(pda_ai)?;
+        let mut worker = Account::<Worker>::try_from(pda_ai)?;
 
         // Check if worker needs to be paid in this cycle
         if worker.last_paid_cycle < cycle_timestamp {
@@ -93,6 +93,9 @@ pub fn process_payroll<'info>(
 
             // Update organization's treasury tracking
             ctx.accounts.org.treasury = ctx.accounts.org.treasury.saturating_sub(salary_amount);
+
+            // Update worker data
+            worker.last_paid_cycle = cycle_timestamp;
         }
     }
 

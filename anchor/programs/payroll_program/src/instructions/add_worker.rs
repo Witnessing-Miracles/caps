@@ -34,6 +34,7 @@ pub fn add_worker(ctx: Context<AddWorkerCtx>, salary: u64) -> Result<()> {
 
     // Log the new worker
     msg!("Worker {} added with salary {}", worker.worker_pubkey, salary);
+    Ok(())
 }
 
 // Context struct: defines all accounts needed for this instruction
@@ -46,9 +47,8 @@ pub struct AddWorkerCtx<'info> {
         mut,
         has_one = authority @ PayrollError::Unauthorized,
         seeds = [b"org", authority.key().as_ref(), org.name.as_bytes()],
-        bump = org.bump,
+        bump = org.bump
     )]
-
     pub org: Account<'info, Organization>,
 
     // The worker account being created
@@ -64,12 +64,11 @@ pub struct AddWorkerCtx<'info> {
         seeds = [b"worker", org.key().as_ref(), worker_pubkey.key().as_ref()],
         bump
     )]
-
     pub worker: Account<'info, Worker>,
 
     // The worker's wallet address (receives payments)
     // Check: We validate this through the seeds constraint
-    // No data deserialization needed-just used as part of PDA
+    // No data deserialization needed - just used as part of PDA
     // Check: Worker wallet pubkey (validated in seeds)
     pub worker_pubkey: AccountInfo<'info>,
 
