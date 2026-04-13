@@ -44,7 +44,7 @@ pub struct FundTreasuryCtx<'info> {
         mut,
         has_one = authority @ PayrollError::Unauthorized,
         seeds = [b"org", authority.key().as_ref(), org.name.as_bytes()],
-        ump = org.bump
+        bump = org.bump
     )]
     pub org: Account<'info, Organization>,
 

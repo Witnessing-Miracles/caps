@@ -33,13 +33,13 @@ pub fn process_payroll<'info>(
         let pda_idx = i * 2;            // Even indices: worker PDA
         let wallet_idx = pda_idx + 1;   // Odd indices: worker wallet
 
-        let pad_ai = &ctx.remaining_accounts[pda_idx];
+        let pda_ai = &ctx.remaining_accounts[pda_idx];
         let wallet_ai = &ctx.remaining_accounts[wallet_idx];
 
         // Verify the worker PDA is correctly derived
         // Reconstruct the expected PDA address
         let worker_wallet_key = wallet_ai.key();
-        let worker_pda_seeds = &[b"worker".as_ref(), org_key().as_ref(), worker_wallet_key.as_ref(),];
+        let worker_pda_seeds = &[b"worker".as_ref(), org_key.as_ref(), worker_wallet_key.as_ref(),];
         let (expected_pda, _ ) = Pubkey::find_program_address(worker_pda_seeds, &program_id);
 
         // Ensure the provided PDA matches the expected one

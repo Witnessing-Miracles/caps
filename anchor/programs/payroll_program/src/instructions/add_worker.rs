@@ -66,10 +66,8 @@ pub struct AddWorkerCtx<'info> {
     )]
     pub worker: Account<'info, Worker>,
 
-    // The worker's wallet address (receives payments)
-    // Check: We validate this through the seeds constraint
-    // No data deserialization needed - just used as part of PDA
-    // Check: Worker wallet pubkey (validated in seeds)
+    /// CHECK: This is the public key of the worker being added. 
+    /// We don't need to check its data because it's only used as a reference in the Worker PDA.
     pub worker_pubkey: AccountInfo<'info>,
 
     // The transaction signer (must be the authority)
