@@ -64,8 +64,8 @@ pub fn process_payroll<'info>(
 
     // ======== Second Pass: Process Payments ========
     for i in 0..num_workers {
-        // Calculate indices: workers are in alternating pairs
-        let pda_idx = 1 * 2;    // Even indices: worker PDA
+        // FIX 1: was `1 * 2` (hardcoded to 1), must use loop variable `i`
+        let pda_idx = i * 2;            // Even indices: worker PDA
         let wallet_idx = pda_idx + 1;   // Odd indices: worker wallet
 
         let pda_ai = &ctx.remaining_accounts[pda_idx];
@@ -78,6 +78,11 @@ pub fn process_payroll<'info>(
         if worker.last_paid_cycle < cycle_timestamp {
             // Get the salary amount before updating
             let salary_amount = worker.salary;
+
+            // FIX 2: update last_paid_cycle BEFORE serializing back to the account
+            // Previously the field was updated after serialize+drop, so the change
+            // was never written to chain and every re-run would pay again.
+            worker.last_paid_cycle = cycle_timestamp;
 
             // Serialize updated worker data back to the account
             let mut data = pda_ai.try_borrow_mut_data()?;
@@ -93,9 +98,6 @@ pub fn process_payroll<'info>(
 
             // Update organization's treasury tracking
             ctx.accounts.org.treasury = ctx.accounts.org.treasury.saturating_sub(salary_amount);
-
-            // Update worker data
-            worker.last_paid_cycle = cycle_timestamp;
         }
     }
 
